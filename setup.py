@@ -32,9 +32,7 @@ class CMakeBuild(build_ext):
         f'-S {source_dir}',
         f'-B {build_dir}',
 
-        f'-DMINI_BUILD_PYTHON=1',
         f'-DMINIPY_EXT_DIR={install_dir}',
-
         f'-DCMAKE_BUILD_TYPE=Release'
     ]
 
