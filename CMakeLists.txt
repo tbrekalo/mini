@@ -9,7 +9,7 @@ option(MINI_BUILD_TESTS "Build tests" OFF)
 option(MINI_BUILD_PYTHON "Build python bindings for minimizer extraction" OFF)
 option(MINIPY_EXT_DIR "Specify python extension install dir" OFF)
 
-add_library(mini STATIC ${PROJECT_SOURCE_DIR}/src/mini.cc)
+add_library(mini SHARED ${PROJECT_SOURCE_DIR}/src/mini.cc)
 add_library(${PROJECT_NAME}::mini ALIAS mini)
 target_include_directories(mini PUBLIC
   $<BUILD_INTERFACE:${CMAKE_CURRENT_LIST_DIR}/include>
