@@ -10,7 +10,7 @@ Minimizer extraction in python with c++ implementation
 
 ### Instalation
 ```bash
-pip install git+git://github.com/tbrekalo/mini.git@master
+pip install git+git://github.com/tbrekalo/mini.git@rawminimizer
 ```
 
 ### Usage
