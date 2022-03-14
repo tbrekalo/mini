@@ -1,3 +1,4 @@
+#include <algorithm>
 #include <deque>
 
 #include "pybind11/pybind11.h"
@@ -28,6 +29,10 @@ constexpr static std::uint8_t kNucleotideCoder[] = {
 };
 /* clang-format on */
 
+constexpr static char kNucleotideDecoder[] = {
+    'A', 'C', 'G', 'T'
+};
+  
 auto Hash(std::uint64_t val, std::uint64_t const kMask) -> std::uint64_t {
   val = ((~val) + (val << 21)) & kMask;
   val = val ^ (val >> 24);
@@ -67,7 +72,8 @@ auto Minimize(std::string const& seq, std::uint8_t const kmer_len,
   auto const kMask = (1ULL << (kmer_len * 2ULL)) - 1ULL;
 
   auto const hash = [kMask](std::uint64_t val) -> std::uint64_t {
-    return detail::Hash(val, kMask);
+    // return detail::Hash(val, kMask);
+    return val;
   };
 
   auto curr_kmer_val = std::uint64_t(0);
@@ -123,6 +129,19 @@ auto Minimize(std::string const& seq, std::uint8_t const kmer_len,
   return dst;
 }
 
+auto DecodeKMer(std::uint64_t code, std::uint8_t kmer_len) -> std::string {
+  auto dst = std::string();
+  dst.reserve(kmer_len);
+
+  while (kmer_len--) {
+    dst += detail::kNucleotideDecoder[code & 3U];
+    code >>= 2ULL;
+  }
+
+  std::reverse(dst.begin(), dst.end());
+  return dst;
+}
+
 }  // namespace mini
 namespace py = pybind11;
 
@@ -134,4 +153,5 @@ PYBIND11_MODULE(minipy, m) {
       .def("strand", &mini::KMer::strand);
 
   m.def("minimize", &mini::Minimize);
+  m.def("decode_kmer", &mini::DecodeKMer);
 }
