@@ -52,7 +52,7 @@ auto Minimize(std::string const& seq, std::uint8_t const kmer_len,
 
   auto curr_kmer_val = std::uint64_t(0);
   auto rc_curr_kmer_val = std::uint64_t(0);
-  auto window = std::deque<KMer>();
+  auto window = std::deque<std::pair<std::uint64_t, KMer>>();
 
   auto const shift_kmer = [kMask](std::uint64_t const kmer,
                                   char const base) -> std::uint64_t {
@@ -68,16 +68,17 @@ auto Minimize(std::string const& seq, std::uint8_t const kmer_len,
             << ((kmer_len - 1ULL) * 2ULL));
   };
 
-  auto const window_push = [&window](KMer const kmer) -> void {
-    while (!window.empty() && window.back().value() > kmer.value()) {
+  auto const window_push = [&window](std::uint64_t const hash,
+                                     KMer const kmer) -> void {
+    while (!window.empty() && window.back().first > hash) {
       window.pop_back();
     }
 
-    window.push_back(kmer);
+    window.emplace_back(hash, kmer);
   };
 
   auto const update_window = [&window, &dst](std::uint32_t const pos) -> void {
-    while (!window.empty() && (window.front().position() <= pos)) {
+    while (!window.empty() && (window.front().second.position() <= pos)) {
       window.pop_front();
     }
   };
@@ -87,14 +88,17 @@ auto Minimize(std::string const& seq, std::uint8_t const kmer_len,
     rc_curr_kmer_val = shift_rc_kmer(rc_curr_kmer_val, seq[i]);
     if (i + 1U >= kmer_len) {
       if (curr_kmer_val < rc_curr_kmer_val) {
-        window_push(KMer(hash(curr_kmer_val), i + 1U - kmer_len, 0));
+        window_push(hash(curr_kmer_val),
+                    KMer(curr_kmer_val, i + 1U - kmer_len, 0));
       } else if (curr_kmer_val > rc_curr_kmer_val) {
-        window_push(KMer(hash(rc_curr_kmer_val), i + 1U - kmer_len, 1));
+        window_push(hash(rc_curr_kmer_val),
+                    KMer(rc_curr_kmer_val, i + 1U - kmer_len, 1));
       }
     }
     if (i >= kmer_len - 1U + win_len - 1U) {
-      if (dst.empty() || dst.back().position() != window.front().position()) {
-        dst.push_back(window.front());
+      if (dst.empty() ||
+          dst.back().position() != window.front().second.position()) {
+        dst.push_back(window.front().second);
       }
       update_window(i - (kmer_len - 1U + win_len - 1U));
     }

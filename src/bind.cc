@@ -1,15 +1,16 @@
 #include "mini/mini.h"
-#include "pybind11/pybind11.h"
-#include "pybind11/stl.h"
+#include "nanobind/nanobind.h"
+#include "nanobind/stl/string.h"
+#include "nanobind/stl/vector.h"
 
-namespace py = pybind11;
+namespace nb = nanobind;
 
-PYBIND11_MODULE(minipy, m) {
-  py::class_<mini::KMer>(m, "KMer")
-      .def(py::init<std::uint64_t, std::uint32_t, bool>())
+NB_MODULE(minipy_ext, m) {
+  nb::class_<mini::KMer>(m, "KMer")
+      .def(nb::init<std::uint64_t, std::uint64_t, bool>())
       .def("value", &mini::KMer::value)
       .def("position", &mini::KMer::position)
       .def("strand", &mini::KMer::strand);
-
-  m.def("minimize", &mini::Minimize);
+  
+  m.def("minimize", mini::Minimize);
 }
