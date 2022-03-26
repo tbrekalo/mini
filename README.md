@@ -2,11 +2,11 @@
 Minimizer extraction in python with c++ implementation
 
 ## Requirements
-- c++14 compliant compiler
-- python >= 3.6 
+- c++17 compliant compiler (clang 7+, gcc 8+)
+- python >= 3.8
 
 ### Dependencies
-- [pybind11](https://github.com/pybind/pybind11)
+- [nanobind](https://github.com/wjakob/nanobind)
 
 ### Instalation
 ```bash
