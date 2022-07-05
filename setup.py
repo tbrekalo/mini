@@ -3,7 +3,7 @@ from skbuild import setup
 
 setup(
     name="minipy",
-    version="1.3.0",
+    version="1.4.0",
     author="Tvrtko Brekalo",
     author_email="brekalo.tvrtko@gmail.com",
     description="Minimizer extraction utility library as described in minimap paper",

@@ -1,1 +1,1 @@
-from .minipy_ext import KMer, minimize
+from .minipy_ext import KMer, minimize, decode_kmer

@@ -11,6 +11,7 @@ NB_MODULE(minipy_ext, m) {
       .def("value", &mini::KMer::value)
       .def("position", &mini::KMer::position)
       .def("strand", &mini::KMer::strand);
-  
+
   m.def("minimize", mini::Minimize);
+  m.def("decode_kmer", mini::DecodeKMer);
 }

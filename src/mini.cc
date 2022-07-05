@@ -26,6 +26,11 @@ constexpr static std::uint8_t kNucleotideCoder[] = {
     255, 255,   0,   1,   3,   3,   2,   0,
     255,   3, 255, 255, 255, 255, 255, 255
 };
+
+constexpr static char kNucleotideDecoder[] = {
+    'A', 'C', 'G', 'T'
+};
+
 /* clang-format on */
 
 }  // namespace detail
@@ -102,6 +107,18 @@ auto Minimize(std::string const& seq, std::uint8_t const kmer_len,
       }
       update_window(i - (kmer_len - 1U + win_len - 1U));
     }
+  }
+
+  return dst;
+}
+
+auto DecodeKMer(KMer const& kmer, std::uint32_t const kmer_len) -> std::string {
+  auto dst = std::string(kmer_len, '\0');
+
+  auto encoded = kmer.value();
+  for (auto i = 0; i < kmer_len; ++i) {
+    dst[kmer_len - 1U - i] = detail::kNucleotideDecoder[encoded & 0b11];
+    encoded >>= 2ULL;
   }
 
   return dst;

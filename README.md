@@ -15,7 +15,7 @@ pip install git+git://github.com/tbrekalo/mini.git@master
 
 ### Usage
 ```python
-from minipy import KMer, minimize
+from minipy import KMer, minimize, decode_kmer
 
 EG_SEQ =  "AACCTTGGACTACGATCGGGGGRACCCCGAACATCTCCTCTCCCATTCTCCCTCCCCTAGAGATTCATTC" \
           "AACCTTGGACTACGATCGGGGGRACCCCGAACATCTCCTCTCCCATTCTCCCTCCCCTAGAGATTCATTC"
@@ -25,6 +25,6 @@ WIN_LEN = 9
 
 minimizers = minimize(EG_SEQ, KMER_LEN, WIN_LEN)
 for m in minimizers:
-  print(f'{m.value()}, {m.position()}, {m.strand()}')
+  print(f'{decode_kmer(m, KMER_LEN)}, {m.value()}, {m.position()}, {m.strand()}')
 ```
 

@@ -30,6 +30,8 @@ class KMer {
 auto Minimize(std::string const& seq, std::uint8_t const kmer_len,
               std::uint8_t const win_len) -> std::vector<KMer>;
 
+auto DecodeKMer(KMer const& kmer, std::uint32_t const kmer_len) -> std::string;
+
 }  // namespace mini
 
 #endif /* MINI_MINI_H_ */
