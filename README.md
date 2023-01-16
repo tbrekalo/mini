@@ -1,7 +1,9 @@
-# mini
+# mini [![Pip Action Status][actions-pip-badge]][actions-pip-link]
 
-[![Pip Action Status][actions-pip-badge]][actions-pip-link]
 Minimizer extraction in python with c++ implementation
+
+[actions-pip-link]: https://github.com/tbrekalo/mini/actions?query=workflow%3APip
+[actions-pip-badge]: https://github.com/tbrekalo/mini/actions/workflows/pip.yml/badge.svg
 
 ## Requirements
 
@@ -23,7 +25,7 @@ pip install git+git://github.com/tbrekalo/mini.git@master
 Via https (if you do not have GitHub ssh configured):
 
 ```
-pip install git+https://github.com/tbrekalo/mini.git
+pip install git+https://github.com/tbrekalo/mini.git@master
 ```
 
 ### Usage
