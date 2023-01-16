@@ -11,7 +11,7 @@ class KMer {
  public:
   KMer() = default;
 
-  constexpr KMer(std::uint64_t value, std::uint32_t position, bool strand)
+  constexpr KMer(std::uint64_t value, std::uint64_t position, bool strand)
       : value_(value), read_origin_((position << 1ULL) | strand) {}
 
   constexpr auto value() const noexcept -> std::uint64_t { return value_; }
