@@ -1,21 +1,24 @@
 cmake_minimum_required(VERSION 3.17)
-project(mini VERSION 1.3.0 LANGUAGES C CXX)
+project(
+  mini
+  VERSION 1.3.0
+  LANGUAGES C CXX)
 
 option(MINI_BUILD_TESTS "Build tests" OFF)
 option(MINI_DEV_PYTHON_BUILD "Build nanobind in dev mode" OFF)
 
 add_library(mini STATIC ${PROJECT_SOURCE_DIR}/src/mini.cc)
-target_include_directories(mini PUBLIC
-  $<BUILD_INTERFACE:${CMAKE_CURRENT_LIST_DIR}/include>)
+target_include_directories(
+  mini PUBLIC $<BUILD_INTERFACE:${CMAKE_CURRENT_LIST_DIR}/include>)
 target_compile_features(mini PRIVATE cxx_std_17)
 set_target_properties(mini PROPERTIES POSITION_INDEPENDENT_CODE ON)
 
-if (MINI_BUILD_TESTS)
+if(MINI_BUILD_TESTS)
   include(${CMAKE_CURRENT_LIST_DIR}/test/Test.cmake)
-endif ()
+endif()
 
-if (MINI_DEV_PYTHON_BUILD OR SKBUILD)
-  if (SKBUILD)
+if(MINI_DEV_PYTHON_BUILD OR SKBUILD)
+  if(SKBUILD)
     message(STATUS "Python_VERSION ${PYTHON_VERSION_STRING}")
     message(STATUS "Python_EXECUTABLE ${PYTHON_EXECUTABLE}")
     message(STATUS "Python_INCLUDE_DIR ${PYTHON_INCLUDE_DIR}")
@@ -24,21 +27,31 @@ if (MINI_DEV_PYTHON_BUILD OR SKBUILD)
     set(Python_EXECUTABLE "${PYTHON_EXECUTABLE}")
     set(Python_INCLUDE_DIR "${PYTHON_INCLUDE_DIR}")
     set(Python_LIBRARIES "${PYTHON_LIBRARY}")
-  endif ()
+  endif()
 
   find_package(Python COMPONENTS Interpreter Development)
-  include(FetchContent)
-  FetchContent_Declare(
-    nanobind 
-    GIT_REPOSITORY https://github.com/wjakob/nanobind.git
-    GIT_TAG master)
-  
-  FetchContent_MakeAvailable(nanobind)
+  if(MINI_DEV_PYTHON_BUILD)
+    include(FetchContent)
+    FetchContent_Declare(
+      nanobind
+      GIT_REPOSITORY https://github.com/wjakob/nanobind.git
+      GIT_TAG master)
+
+    FetchContent_MakeAvailable(nanobind)
+  else()
+    execute_process(
+      COMMAND "${PYTHON_EXECUTABLE}" -c
+              "import nanobind; print(nanobind.cmake_dir())"
+      OUTPUT_VARIABLE _tmp_dir
+      OUTPUT_STRIP_TRAILING_WHITESPACE COMMAND_ECHO STDOUT)
+    list(APPEND CMAKE_PREFIX_PATH "${_tmp_dir}")
+
+    # Now import nanobind from CMake
+    find_package(nanobind CONFIG REQUIRED)
+  endif()
 
   nanobind_add_module(minipy_ext NB_STATIC src/bind.cc)
   target_link_libraries(minipy_ext PRIVATE mini)
 
   install(TARGETS minipy_ext LIBRARY DESTINATION .)
-endif ()
-
-
+endif()
