@@ -9,8 +9,15 @@ Minimizer extraction in python with c++ implementation
 - [nanobind](https://github.com/wjakob/nanobind)
 
 ### Instalation
+
+Via ssh (recommended):
 ```bash
 pip install git+git://github.com/tbrekalo/mini.git@master
+```
+
+Via https (if you do not have GitHub ssh configured):
+```
+pip install git+https://github.com/tbrekalo/mini.git
 ```
 
 ### Usage
